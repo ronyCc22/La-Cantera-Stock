@@ -1,0 +1,36 @@
+﻿@model IEnumerable<LaCanteraStock.Models.ProductoTalla>
+
+@{
+    ViewData["Title"] = "Inventario";
+}
+
+<h1>Inventario</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Asignar talla y stock</a>
+    <a asp-action="Movimientos" class="btn btn-outline-secondary">Ver movimientos</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Talla</th>
+            <th>Stock actual</th>
+            <th>Stock mínimo</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr class="@(item.StockActual <= item.StockMinimo ? "table-danger" : "")">
+                <td>@ViewBag.Productos[item.ProductoID]</td>
+                <td>@ViewBag.Tallas[item.TallaID]</td>
+                <td>@item.StockActual</td>
+                <td>@item.StockMinimo</td>
+                <td>@(item.StockActual <= item.StockMinimo ? "Stock bajo" : "OK")</td>
+            </tr>
+        }
+    </tbody>
+</table>

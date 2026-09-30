@@ -1,0 +1,48 @@
+﻿@model LaCanteraStock.Models.Producto
+
+@{
+    ViewData["Title"] = "Nuevo producto";
+}
+
+<h1>Nuevo producto</h1>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="CategoriaID" class="form-label">Categoría</label>
+        <select asp-for="CategoriaID" class="form-select"
+                asp-items="ViewBag.ListaCategorias"></select>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Nombre" class="form-label"></label>
+        <input asp-for="Nombre" class="form-control" />
+        <span asp-validation-for="Nombre" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Descripcion" class="form-label"></label>
+        <input asp-for="Descripcion" class="form-control" />
+        <span asp-validation-for="Descripcion" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PrecioUnitario" class="form-label">Precio (S/)</label>
+        <input asp-for="PrecioUnitario" class="form-control" />
+        <span asp-validation-for="PrecioUnitario" class="text-danger"></span>
+    </div>
+
+    <div class="form-check mb-2">
+        <input asp-for="EsConjunto" class="form-check-input" />
+        <label asp-for="EsConjunto" class="form-check-label">Es conjunto</label>
+    </div>
+
+    <div class="form-check mb-3">
+        <input asp-for="Activo" class="form-check-input" />
+        <label asp-for="Activo" class="form-check-label"></label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

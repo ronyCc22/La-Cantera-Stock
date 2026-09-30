@@ -1,0 +1,39 @@
+﻿@model IEnumerable<LaCanteraStock.Models.Cliente>
+
+@{
+    ViewData["Title"] = "Clientes";
+}
+
+<h1>Clientes</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Nuevo cliente</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre completo</th>
+            <th>Tipo doc.</th>
+            <th>Documento</th>
+            <th>Teléfono</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.NombreCompleto</td>
+                <td>@ViewBag.TiposDocumento[item.TipoDocumentoID]</td>
+                <td>@item.Documento</td>
+                <td>@item.Telefono</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.ClienteID">Detalles</a> |
+                    <a asp-action="Edit" asp-route-id="@item.ClienteID">Editar</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ClienteID">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

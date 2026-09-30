@@ -1,0 +1,36 @@
+﻿@model LaCanteraStock.Models.ProductoTalla
+
+@{
+    ViewData["Title"] = "Asignar talla y stock";
+}
+
+<h1>Asignar talla y stock</h1>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="ProductoID" class="form-label">Producto</label>
+        <select asp-for="ProductoID" class="form-select"
+                asp-items="ViewBag.ListaProductos"></select>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="TallaID" class="form-label">Talla</label>
+        <select asp-for="TallaID" class="form-select"
+                asp-items="ViewBag.ListaTallas"></select>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="StockActual" class="form-label">Stock inicial</label>
+        <input asp-for="StockActual" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="StockMinimo" class="form-label">Stock mínimo</label>
+        <input asp-for="StockMinimo" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

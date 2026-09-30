@@ -1,0 +1,27 @@
+﻿@model LaCanteraStock.Models.Cliente
+
+@{
+    ViewData["Title"] = "Detalles de cliente";
+}
+
+<h1>Detalles de cliente</h1>
+
+<dl class="row">
+    <dt class="col-sm-3">Nombre completo</dt>
+    <dd class="col-sm-9">@Model.NombreCompleto</dd>
+
+    <dt class="col-sm-3">Tipo de documento</dt>
+    <dd class="col-sm-9">@ViewBag.TiposDocumento[Model.TipoDocumentoID]</dd>
+
+    <dt class="col-sm-3">Documento</dt>
+    <dd class="col-sm-9">@Model.Documento</dd>
+
+    <dt class="col-sm-3">Teléfono</dt>
+    <dd class="col-sm-9">@Model.Telefono</dd>
+
+    <dt class="col-sm-3">Dirección</dt>
+    <dd class="col-sm-9">@Model.Direccion</dd>
+</dl>
+
+<a asp-action="Edit" asp-route-id="@Model.ClienteID">Editar</a> |
+<a asp-action="Index">Volver a la lista</a>

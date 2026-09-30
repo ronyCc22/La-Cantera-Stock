@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Nueva venta";
+}
+
+<h1>Nueva venta</h1>
+
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label class="form-label">Cliente</label>
+        <select name="clienteId" class="form-select"
+                asp-items="ViewBag.ListaClientes"></select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Modalidad</label>
+        <select name="modalidadId" class="form-select"
+                asp-items="ViewBag.ListaModalidades"></select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Fecha de entrega</label>
+        <input type="date" name="fechaEntrega" class="form-control"
+               value="@DateTime.Now.ToString("yyyy-MM-dd")" required />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Observaciones</label>
+        <input type="text" name="observaciones" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Crear venta</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

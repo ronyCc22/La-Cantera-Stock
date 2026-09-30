@@ -1,0 +1,72 @@
+﻿@model LaCanteraStock.Models.Pedido
+
+@{
+    ViewData["Title"] = "Detalle de venta";
+    var detalles = (List<LaCanteraStock.Models.DetallePedido>)ViewBag.Detalles;
+}
+
+<h1>Boleta @Model.NumeroBoleta</h1>
+
+<p>
+    <strong>Cliente:</strong> @ViewBag.Cliente <br />
+    <strong>Fecha de emisión:</strong> @Model.FechaEmision.ToString("dd/MM/yyyy HH:mm") <br />
+    <strong>Fecha de entrega:</strong> @Model.FechaEntrega.ToString("dd/MM/yyyy") <br />
+    <strong>Observaciones:</strong> @Model.Observaciones
+</p>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<h4>Agregar producto</h4>
+
+<form asp-action="AgregarDetalle" method="post" class="row g-2 mb-4">
+    <input type="hidden" name="pedidoId" value="@Model.PedidoID" />
+
+    <div class="col-md-6">
+        <select name="productoTallaId" class="form-select"
+                asp-items="ViewBag.ListaProductos"></select>
+    </div>
+
+    <div class="col-md-2">
+        <input type="number" name="cantidad" class="form-control"
+               min="1" value="1" />
+    </div>
+
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-primary">Agregar</button>
+    </div>
+</form>
+
+<h4>Productos de la venta</h4>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio unitario</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var d in detalles)
+        {
+            <tr>
+                <td>@d.Descripcion</td>
+                <td>@d.Cantidad</td>
+                <td>S/ @d.PrecioUnitario.ToString("N2")</td>
+                <td>S/ @d.Subtotal.ToString("N2")</td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th colspan="3" class="text-end">Total</th>
+            <th>S/ @Model.Total.ToString("N2")</th>
+        </tr>
+    </tfoot>
+</table>
+
+<a asp-action="Index" class="btn btn-outline-secondary">Volver a las ventas</a>

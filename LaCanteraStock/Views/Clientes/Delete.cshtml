@@ -1,0 +1,23 @@
+﻿@model LaCanteraStock.Models.Cliente
+
+@{
+    ViewData["Title"] = "Eliminar cliente";
+}
+
+<h1>Eliminar cliente</h1>
+<h5>¿Seguro que quieres eliminar este cliente?</h5>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<dl class="row">
+    <dt class="col-sm-3">Nombre completo</dt>
+    <dd class="col-sm-9">@Model.NombreCompleto</dd>
+
+    <dt class="col-sm-3">Documento</dt>
+    <dd class="col-sm-9">@ViewBag.TiposDocumento[Model.TipoDocumentoID] @Model.Documento</dd>
+</dl>
+
+<form asp-action="Delete" asp-route-id="@Model.ClienteID" method="post">
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

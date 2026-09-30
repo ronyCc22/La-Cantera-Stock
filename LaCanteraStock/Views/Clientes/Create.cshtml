@@ -1,0 +1,44 @@
+﻿@model LaCanteraStock.Models.Cliente
+
+@{
+    ViewData["Title"] = "Nuevo cliente";
+}
+
+<h1>Nuevo cliente</h1>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="NombreCompleto" class="form-label">Nombre completo</label>
+        <input asp-for="NombreCompleto" class="form-control" />
+        <span asp-validation-for="NombreCompleto" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="TipoDocumentoID" class="form-label">Tipo de documento</label>
+        <select asp-for="TipoDocumentoID" class="form-select"
+                asp-items="ViewBag.ListaTipos"></select>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Documento" class="form-label"></label>
+        <input asp-for="Documento" class="form-control" />
+        <span asp-validation-for="Documento" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Telefono" class="form-label">Teléfono</label>
+        <input asp-for="Telefono" class="form-control" />
+        <span asp-validation-for="Telefono" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Direccion" class="form-label">Dirección</label>
+        <input asp-for="Direccion" class="form-control" />
+        <span asp-validation-for="Direccion" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

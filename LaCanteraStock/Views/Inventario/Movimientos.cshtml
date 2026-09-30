@@ -1,0 +1,35 @@
+﻿@model IEnumerable<LaCanteraStock.Models.MovimientoStock>
+
+@{
+    ViewData["Title"] = "Movimientos de stock";
+}
+
+<h1>Movimientos de stock</h1>
+
+<p>
+    <a asp-action="Index" class="btn btn-outline-secondary">Volver al inventario</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Producto - Talla</th>
+            <th>Tipo</th>
+            <th>Cantidad</th>
+            <th>Observación</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@ViewBag.Nombres[item.ProductoTallaID]</td>
+                <td>@ViewBag.Tipos[item.TipoMovimientoID]</td>
+                <td>@item.Cantidad</td>
+                <td>@item.Observacion</td>
+            </tr>
+        }
+    </tbody>
+</table>
