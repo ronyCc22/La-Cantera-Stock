@@ -3,74 +3,77 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - LaCanteraStock</title>
-    <script type="importmap"></script>
+    <title>@ViewData["Title"] - La Cantera Stock</title>
+
+    <!-- Bootstrap 5 Local -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <!-- Font Awesome Local (Directo desde wwwroot/lib/font-awesome) -->
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
+
+    <!-- Estilos propios -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/LaCanteraStock.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-    <nav class="navbar navbar-dark" style="background-color: #071A33;">
-        <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-cantera-dark py-3 shadow">
+            <div class="container-fluid px-4">
+                <a class="navbar-brand fw-bold fs-4 tracking-wide" asp-controller="Home" asp-action="Index">
+                    LA CANTERA <span class="text-cantera-green">STOCK</span>
+                    <span class="fs-6 fw-light text-secondary ms-2 d-none d-md-inline">Tienda de ropa deportiva</span>
+                </a>
 
-            <div class="w-100">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-                <!-- Primera fila -->
-                <div class="d-flex justify-content-between align-items-center py-2">
+                <div class="collapse navbar-collapse" id="menuPrincipal">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
 
-                    <div>
-                        <a class="navbar-brand fw-bold" asp-controller="Categorias" asp-action="Index">
-                            LA CANTERA <span style="color: #20B26B;">STOCK</span>
-                        </a>
-
-                        <small class="text-white-50 ms-2">
-                            Tienda de ropa deportiva
-                        </small>
-                    </div>
-
-                    <a class="nav-link text-white" href="#">
-                        👤 Ingresar
-                    </a>
-
-                </div>
-
-                <!-- Segunda fila -->
-                <div class="border-top border-secondary pt-2 pb-2">
-                    <ul class="navbar-nav flex-row gap-4">
-
-                        <li class="nav-item">
-                            <a class="nav-link text-white" asp-controller="Productos" asp-action="Index">
-                                Stock en tienda >
+                        <!-- Menú Desplegable: Stock en Tienda -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white fw-semibold px-3" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-boxes me-1 text-cantera-green"></i>Stock en tienda
                             </a>
+                            <ul class="dropdown-menu dropdown-cantera">
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Productos" asp-action="Catalogo" asp-route-categoria="Camisetas">
+                                        <i class="fas fa-tshirt me-2"></i>Camisetas
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Productos" asp-action="Catalogo" asp-route-categoria="Shorts">
+                                        <i class="fas fa-running me-2"></i>Shorts
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider border-secondary opacity-25"></li>
+                                <li>
+                                    <a class="dropdown-item fw-bold text-cantera-green" asp-controller="Productos" asp-action="Catalogo">
+                                        <i class="fas fa-th me-2"></i>Ver TODO el Stock
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="#">
-                                Insumos >
-                            </a>
+                            <a class="nav-link text-white-50 px-3" asp-controller="Insumos" asp-action="Index">Insumos &gt;</a>
                         </li>
-
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="#">
-                                Ideas de diseños >
-                            </a>
+                            <a class="nav-link text-white-50 px-3" asp-controller="Disenos" asp-action="Index">Ideas de diseños &gt;</a>
                         </li>
-
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-controller="Pedidos" asp-action="Index">
-                                Pedidos >
-                            </a>
+                            <a class="nav-link text-white-50 px-3" asp-controller="Pedidos" asp-action="Index">Pedidos &gt;</a>
                         </li>
-
                     </ul>
+                    <div class="d-flex align-items-center gap-3">
+                        <a class="text-white text-decoration-none small" href="#">
+                            <i class="fas fa-user-circle me-1 text-cantera-green"></i> Ingresar
+                        </a>
+                    </div>
                 </div>
-
             </div>
-
-        </div>
-    </nav>
-</header>
+        </nav>
+    </header>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -82,7 +85,7 @@
             &copy; 2026 - LaCanteraStock - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)

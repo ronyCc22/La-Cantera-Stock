@@ -29,3 +29,53 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+/* Paleta La Cantera Stock */
+.bg-cantera-dark {
+    background-color: #08182b !important;
+}
+
+.text-cantera-green {
+    color: #00d166 !important;
+}
+
+.btn-cantera-green {
+    background-color: #00d166;
+    color: #08182b;
+    font-weight: 600;
+    border: none;
+}
+
+    .btn-cantera-green:hover {
+        background-color: #00b853;
+        color: #ffffff;
+    }
+
+/* Efecto Hover para el Menú Desplegable */
+@media (min-width: 992px) {
+    .nav-item.dropdown:hover .dropdown-menu {
+        display: block;
+        margin-top: 0;
+        animation: fadeIn 0.2s ease-in-out;
+    }
+}
+
+.dropdown-cantera {
+    background-color: #162e4a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    border-radius: 8px;
+    padding: 0.5rem 0;
+}
+
+    .dropdown-cantera .dropdown-item {
+        color: #d1dbe5;
+        padding: 10px 20px;
+        font-size: 0.95rem;
+        transition: all 0.2s;
+    }
+
+        .dropdown-cantera .dropdown-item:hover {
+            background-color: #0d2035;
+            color: #00d166;
+            padding-left: 25px;
+        }

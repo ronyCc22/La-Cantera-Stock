@@ -15,6 +15,61 @@ namespace LaCanteraStock.Controllers
             _context = context;
         }
 
+        // GET: Productos/Catalogo
+        public IActionResult Catalogo(string? categoria, short? tallaId, string? buscar)
+        {
+            // 1. Base de productos activos
+            var consulta = _context.Productos
+                .Where(p => p.Activo)
+                .AsQueryable();
+
+            // 2. Filtro por Categoría (Camisetas / Shorts)
+            if (!string.IsNullOrEmpty(categoria))
+            {
+                var cat = _context.Categorias.FirstOrDefault(c => c.Nombre.ToLower() == categoria.ToLower());
+                if (cat != null)
+                {
+                    consulta = consulta.Where(p => p.CategoriaID == cat.CategoriaID);
+                }
+            }
+
+            // 3. Filtro por buscador (Nombre o Descripción)
+            if (!string.IsNullOrEmpty(buscar))
+            {
+                consulta = consulta.Where(p => p.Nombre.Contains(buscar) || p.Descripcion.Contains(buscar));
+            }
+
+            var productos = consulta.OrderBy(p => p.Nombre).ToList();
+            var productoIds = productos.Select(p => p.ProductoID).ToList();
+
+            // 4. Cargar existencias por talla de los productos encontrados
+            var productoTallas = _context.ProductoTallas
+                .Where(pt => productoIds.Contains(pt.ProductoID))
+                .ToList();
+
+            // 5. Filtro adicional por Talla específica (si el vendedor seleccionó una)
+            if (tallaId.HasValue)
+            {
+                var idsConTallaDisponible = productoTallas
+                    .Where(pt => pt.TallaID == tallaId.Value && pt.StockActual > 0)
+                    .Select(pt => pt.ProductoID)
+                    .Distinct()
+                    .ToList();
+
+                productos = productos.Where(p => idsConTallaDisponible.Contains(p.ProductoID)).ToList();
+            }
+
+            // 6. Enviar datos de soporte a la vista mediante ViewBag (respetando arquitectura estándar)
+            ViewBag.Tallas = _context.Tallas.OrderBy(t => t.Orden).ToList();
+            ViewBag.Categorias = _context.Categorias.Where(c => c.Activo).ToList();
+            ViewBag.ProductosTallas = productoTallas;
+            ViewBag.CategoriaSeleccionada = categoria;
+            ViewBag.TallaSeleccionada = tallaId;
+            ViewBag.Buscar = buscar;
+
+            return View(productos);
+        }
+
         // Prepara el desplegable de categorías
         private void CargarCategorias()
         {
