@@ -7,6 +7,6 @@ namespace LaCanteraStock.Models
         [Key]
         public byte TipoEstampadoID { get; set; }
 
-        public string Nombre { get; set; }
+        public string Nombre { get; set; } = string.Empty;
     }
 }

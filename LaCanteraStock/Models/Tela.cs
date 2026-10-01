@@ -7,7 +7,7 @@ namespace LaCanteraStock.Models
         [Key]
         public int TelaID { get; set; }
 
-        public string Nombre { get; set; }
+        public string Nombre { get; set; } = string.Empty;
 
         public string Descripcion { get; set; }
 

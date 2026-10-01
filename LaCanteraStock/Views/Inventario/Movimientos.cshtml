@@ -1,35 +1,87 @@
 ﻿@model IEnumerable<LaCanteraStock.Models.MovimientoStock>
 
 @{
-    ViewData["Title"] = "Movimientos de stock";
+    ViewData["Title"] = "Historial de Movimientos";
+    var productoTallas = ViewBag.ProductoTallas as Dictionary<int, LaCanteraStock.Models.ProductoTalla>;
+    var productos = ViewBag.Productos as Dictionary<int, string>;
+    var tallas = ViewBag.Tallas as Dictionary<int, string>;
+    var tiposMovimiento = ViewBag.TiposMovimiento as Dictionary<byte, string>;
 }
 
-<h1>Movimientos de stock</h1>
+<div class="d-flex justify-content-between align-items-center my-4">
+    <div>
+        <h2 class="fw-bold text-dark mb-0">
+            <i class="fa-solid fa-clock-rotate-left me-2 text-primary"></i>Kárdex de Movimientos
+        </h2>
+        <p class="text-muted mb-0">Historial detallado de entradas y salidas de inventario.</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary shadow-sm">
+        <i class="fa-solid fa-arrow-left me-1"></i> Regresar al Inventario
+    </a>
+</div>
 
-<p>
-    <a asp-action="Index" class="btn btn-outline-secondary">Volver al inventario</a>
-</p>
+<div class="card shadow-sm border-0 rounded-3">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Fecha / Hora</th>
+                        <th>Producto</th>
+                        <th>Talla</th>
+                        <th>Tipo Movimiento</th>
+                        <th>Cantidad</th>
+                        <th>Observación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center py-4 text-muted">
+                                <i class="fa-solid fa-receipt fa-2x mb-2 d-block"></i> No hay registros de movimientos.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model)
+                        {
+                            var pt = productoTallas != null && productoTallas.ContainsKey(item.ProductoTallaID) ? productoTallas[item.ProductoTallaID] : null;
+                            var nomProd = pt != null && productos != null && productos.ContainsKey(pt.ProductoID) ? productos[pt.ProductoID] : "N/A";
+                            var nomTalla = pt != null && tallas != null && tallas.ContainsKey(pt.TallaID) ? tallas[pt.TallaID] : "N/A";
+                            var tipoNom = tiposMovimiento != null && tiposMovimiento.ContainsKey(item.TipoMovimientoID) ? tiposMovimiento[item.TipoMovimientoID] : "Desconocido";
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Fecha</th>
-            <th>Producto - Talla</th>
-            <th>Tipo</th>
-            <th>Cantidad</th>
-            <th>Observación</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
-                <td>@ViewBag.Nombres[item.ProductoTallaID]</td>
-                <td>@ViewBag.Tipos[item.TipoMovimientoID]</td>
-                <td>@item.Cantidad</td>
-                <td>@item.Observacion</td>
-            </tr>
-        }
-    </tbody>
-</table>
+                            <tr>
+                                <td class="ps-4 text-muted">
+                                    <i class="fa-regular fa-calendar-days me-1"></i>
+                                    @item.Fecha.ToString("dd/MM/yyyy HH:mm")
+                                </td>
+                                <td class="fw-semibold">@nomProd</td>
+                                <td>
+                                    <span class="badge bg-light text-dark border">@nomTalla</span>
+                                </td>
+                                <td>
+                                    @if (item.TipoMovimientoID == 1)
+                                    {
+                                        <span class="badge bg-success text-white px-2 py-1">
+                                            <i class="fa-solid fa-arrow-down me-1"></i> @tipoNom
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger text-white px-2 py-1">
+                                            <i class="fa-solid fa-arrow-up me-1"></i> @tipoNom
+                                        </span>
+                                    }
+                                </td>
+                                <td class="fw-bold fs-6">@item.Cantidad</td>
+                                <td class="text-secondary">@(string.IsNullOrEmpty(item.Observacion) ? "-" : item.Observacion)</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

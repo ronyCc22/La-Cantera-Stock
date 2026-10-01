@@ -1,7 +1,8 @@
-﻿using LaCanteraStock.AccesoDatos;
-using LaCanteraStock.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using LaCanteraStock.AccesoDatos;
+using LaCanteraStock.Models;
 
 namespace LaCanteraStock.Controllers
 {
@@ -14,105 +15,78 @@ namespace LaCanteraStock.Controllers
             _context = context;
         }
 
-        // Desplegables de productos y tallas
-        private void CargarListas()
+        // GET: Inventario
+        public async Task<IActionResult> Index()
         {
-            ViewBag.ListaProductos = new SelectList(
-                _context.Productos.ToList(), "ProductoID", "Nombre");
+            var inventarios = await _context.ProductoTallas.ToListAsync();
+            var productos = await _context.Productos.ToDictionaryAsync(p => p.ProductoID, p => p.Nombre);
+            var tallas = await _context.Tallas.ToDictionaryAsync(t => t.TallaID, t => t.Nombre);
 
-            ViewBag.ListaTallas = new SelectList(
-                _context.Tallas.OrderBy(t => t.Orden).ToList(),
-                "TallaID", "Nombre");
+            ViewBag.Productos = productos;
+            ViewBag.Tallas = tallas;
+
+            return View(inventarios);
         }
 
-        // Stock actual de cada producto y talla
-        public IActionResult Index()
+        // GET: Inventario/Create
+        public async Task<IActionResult> Create()
         {
-            ViewBag.Productos = _context.Productos
-                .ToDictionary(p => p.ProductoID, p => p.Nombre);
-
-            ViewBag.Tallas = _context.Tallas
-                .ToDictionary(t => t.TallaID, t => t.Nombre);
-
-            var lista = _context.ProductoTallas.ToList();
-            return View(lista);
-        }
-
-        // Formulario para asignar una talla a un producto
-        public IActionResult Create()
-        {
-            CargarListas();
+            ViewBag.ProductoID = new SelectList(await _context.Productos.ToListAsync(), "ProductoID", "Nombre");
+            ViewBag.TallaID = new SelectList(await _context.Tallas.ToListAsync(), "TallaID", "Nombre");
             return View();
         }
 
+        // POST: Inventario/Create
         [HttpPost]
-        public IActionResult Create(ProductoTalla productoTalla)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(ProductoTalla productoTalla)
         {
-            bool yaExiste = _context.ProductoTallas.Any(x =>
-                x.ProductoID == productoTalla.ProductoID &&
-                x.TallaID == productoTalla.TallaID);
-
-            if (yaExiste)
-                ModelState.AddModelError("",
-                    "Ese producto ya tiene esa talla registrada.");
-
-            if (productoTalla.StockActual < 0 || productoTalla.StockMinimo < 0)
-                ModelState.AddModelError("",
-                    "El stock no puede ser negativo.");
-
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                CargarListas();
-                return View(productoTalla);
-            }
+                _context.ProductoTallas.Add(productoTalla);
+                await _context.SaveChangesAsync();
 
-            _context.ProductoTallas.Add(productoTalla);
-            _context.SaveChanges();
-
-            // Si empieza con stock, se anota como una Entrada
-            if (productoTalla.StockActual > 0)
-            {
-                var movimiento = new MovimientoStock
+                if (productoTalla.StockActual > 0)
                 {
-                    ProductoTallaID = productoTalla.ProductoTallaID,
-                    TipoMovimientoID = 1,
-                    Cantidad = productoTalla.StockActual,
-                    Fecha = DateTime.Now,
-                    UsuarioID = 1,
-                    Observacion = "Stock inicial"
-                };
-                _context.MovimientosStock.Add(movimiento);
-                _context.SaveChanges();
+                    var movimientoInicial = new MovimientoStock
+                    {
+                        ProductoTallaID = productoTalla.ProductoTallaID,
+                        TipoMovimientoID = 1, // 1: Entrada Inicial
+                        Cantidad = productoTalla.StockActual,
+                        Fecha = DateTime.Now,
+                        UsuarioID = 1, // Usuario por defecto / Admin
+                        Observacion = "Ingreso de stock inicial"
+                    };
+                    _context.MovimientosStock.Add(movimientoInicial);
+                    await _context.SaveChangesAsync();
+                }
+
+                return RedirectToAction(nameof(Index));
             }
 
-            return RedirectToAction("Index");
+            ViewBag.ProductoID = new SelectList(await _context.Productos.ToListAsync(), "ProductoID", "Nombre", productoTalla.ProductoID);
+            ViewBag.TallaID = new SelectList(await _context.Tallas.ToListAsync(), "TallaID", "Nombre", productoTalla.TallaID);
+            return View(productoTalla);
         }
 
-        // Historial de entradas y salidas de stock
-        public IActionResult Movimientos()
+        // GET: Inventario/Movimientos
+        public async Task<IActionResult> Movimientos()
         {
-            var nombres = (from pt in _context.ProductoTallas
-                           join p in _context.Productos
-                               on pt.ProductoID equals p.ProductoID
-                           join t in _context.Tallas
-                               on pt.TallaID equals t.TallaID
-                           select new
-                           {
-                               pt.ProductoTallaID,
-                               Nombre = p.Nombre + " - " + t.Nombre
-                           }).ToList();
-
-            ViewBag.Nombres = nombres
-                .ToDictionary(x => x.ProductoTallaID, x => x.Nombre);
-
-            ViewBag.Tipos = _context.TiposMovimiento
-                .ToDictionary(t => t.TipoMovimientoID, t => t.Nombre);
-
-            var lista = _context.MovimientosStock
+            var movimientos = await _context.MovimientosStock
                 .OrderByDescending(m => m.Fecha)
-                .ToList();
+                .ToListAsync();
 
-            return View(lista);
+            var productoTallas = await _context.ProductoTallas.ToDictionaryAsync(pt => pt.ProductoTallaID, pt => pt);
+            var productos = await _context.Productos.ToDictionaryAsync(p => p.ProductoID, p => p.Nombre);
+            var tallas = await _context.Tallas.ToDictionaryAsync(t => t.TallaID, t => t.Nombre);
+            var tiposMovimiento = await _context.TiposMovimiento.ToDictionaryAsync(tm => tm.TipoMovimientoID, tm => tm.Nombre);
+
+            ViewBag.ProductoTallas = productoTallas;
+            ViewBag.Productos = productos;
+            ViewBag.Tallas = tallas;
+            ViewBag.TiposMovimiento = tiposMovimiento;
+
+            return View(movimientos);
         }
     }
 }

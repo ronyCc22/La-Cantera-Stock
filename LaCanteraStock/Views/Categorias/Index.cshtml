@@ -1,37 +1,56 @@
 ﻿@model IEnumerable<LaCanteraStock.Models.Categoria>
 
 @{
-    ViewData["Title"] = "Categorías";
+    ViewData["Title"] = "Gestión de Categorías";
 }
 
-<h1>Categorías</h1>
+<div class="d-flex justify-content-between align-items-center my-4">
+    <div>
+        <h2 class="fw-bold text-dark mb-0">Categorías</h2>
+        <p class="text-muted mb-0">Listado general de categorías registradas.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary shadow-sm">
+        <i class="fa-solid fa-plus me-1"></i> Nueva Categoría
+    </a>
+</div>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Nueva categoría</a>
-</p>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Activo</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Nombre</td>
-                <td>@item.Descripcion</td>
-                <td>@(item.Activo ? "Sí" : "No")</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.CategoriaID">Detalles</a> |
-                    <a asp-action="Edit" asp-route-id="@item.CategoriaID">Editar</a> |
-                    <a asp-action="Delete" asp-route-id="@item.CategoriaID">Eliminar</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="card shadow-sm border-0 rounded-3">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">ID</th>
+                        <th>Nombre</th>
+                        <th>Estado</th>
+                        <th class="text-end pe-4">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-4 fw-bold text-secondary">#@item.CategoriaID</td>
+                            <td class="fw-semibold">@item.Nombre</td>
+                            <td>
+                                @if (item.Activo)
+                                {
+                                    <span class="badge bg-success">Activo</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Inactivo</span>
+                                }
+                            </td>
+                            <td class="text-end pe-4">
+                                <a asp-action="Edit" asp-route-id="@item.CategoriaID" class="btn btn-sm btn-outline-primary me-1">Editar</a>
+                                <a asp-action="Details" asp-route-id="@item.CategoriaID" class="btn btn-sm btn-outline-info me-1">Detalles</a>
+                                <a asp-action="Delete" asp-route-id="@item.CategoriaID" class="btn btn-sm btn-outline-danger">Eliminar</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

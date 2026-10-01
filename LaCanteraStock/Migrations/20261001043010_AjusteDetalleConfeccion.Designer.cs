@@ -4,6 +4,7 @@ using LaCanteraStock.AccesoDatos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LaCanteraStock.Migrations
 {
     [DbContext(typeof(BDContexto))]
-    partial class BDContextoModelSnapshot : ModelSnapshot
+    [Migration("20261001043010_AjusteDetalleConfeccion")]
+    partial class AjusteDetalleConfeccion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,36 +47,6 @@ namespace LaCanteraStock.Migrations
                     b.HasKey("CategoriaID");
 
                     b.ToTable("Categorias");
-
-                    b.HasData(
-                        new
-                        {
-                            CategoriaID = 1,
-                            Activo = true,
-                            Descripcion = "Camisetas deportivas",
-                            Nombre = "Camiseta"
-                        },
-                        new
-                        {
-                            CategoriaID = 2,
-                            Activo = true,
-                            Descripcion = "Shorts deportivos",
-                            Nombre = "Short"
-                        },
-                        new
-                        {
-                            CategoriaID = 3,
-                            Activo = true,
-                            Descripcion = "Pantalones deportivos",
-                            Nombre = "Pantalón"
-                        },
-                        new
-                        {
-                            CategoriaID = 4,
-                            Activo = true,
-                            Descripcion = "Casacas y abrigos",
-                            Nombre = "Casaca"
-                        });
                 });
 
             modelBuilder.Entity("LaCanteraStock.Models.Cliente", b =>
@@ -456,38 +429,6 @@ namespace LaCanteraStock.Migrations
                     b.HasKey("TallaID");
 
                     b.ToTable("Tallas");
-
-                    b.HasData(
-                        new
-                        {
-                            TallaID = (short)1,
-                            Nombre = "S",
-                            Orden = (byte)0
-                        },
-                        new
-                        {
-                            TallaID = (short)2,
-                            Nombre = "M",
-                            Orden = (byte)0
-                        },
-                        new
-                        {
-                            TallaID = (short)3,
-                            Nombre = "L",
-                            Orden = (byte)0
-                        },
-                        new
-                        {
-                            TallaID = (short)4,
-                            Nombre = "XL",
-                            Orden = (byte)0
-                        },
-                        new
-                        {
-                            TallaID = (short)5,
-                            Nombre = "XXL",
-                            Orden = (byte)0
-                        });
                 });
 
             modelBuilder.Entity("LaCanteraStock.Models.Tela", b =>
@@ -512,29 +453,6 @@ namespace LaCanteraStock.Migrations
                     b.HasKey("TelaID");
 
                     b.ToTable("Telas");
-
-                    b.HasData(
-                        new
-                        {
-                            TelaID = 1,
-                            Activo = true,
-                            Descripcion = "Suave y transpirable",
-                            Nombre = "Algodón peinado"
-                        },
-                        new
-                        {
-                            TelaID = 2,
-                            Activo = true,
-                            Descripcion = "Secado rápido",
-                            Nombre = "Poliéster Dry-Fit"
-                        },
-                        new
-                        {
-                            TelaID = 3,
-                            Activo = true,
-                            Descripcion = "Elástico y cómodo",
-                            Nombre = "Jersey deportivo"
-                        });
                 });
 
             modelBuilder.Entity("LaCanteraStock.Models.TipoDocumento", b =>
@@ -566,28 +484,6 @@ namespace LaCanteraStock.Migrations
                     b.HasKey("TipoEstampadoID");
 
                     b.ToTable("TiposEstampado");
-
-                    b.HasData(
-                        new
-                        {
-                            TipoEstampadoID = (byte)1,
-                            Nombre = "Sublimado"
-                        },
-                        new
-                        {
-                            TipoEstampadoID = (byte)2,
-                            Nombre = "Serigrafía"
-                        },
-                        new
-                        {
-                            TipoEstampadoID = (byte)3,
-                            Nombre = "Bordado"
-                        },
-                        new
-                        {
-                            TipoEstampadoID = (byte)4,
-                            Nombre = "Vinil"
-                        });
                 });
 
             modelBuilder.Entity("LaCanteraStock.Models.TipoMovimiento", b =>

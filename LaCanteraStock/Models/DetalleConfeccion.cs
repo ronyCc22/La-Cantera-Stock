@@ -4,19 +4,19 @@ namespace LaCanteraStock.Models
 {
     public class DetalleConfeccion
     {
-        [Key]
-        public int DetallePedidoID { get; set; }
-
+        public int DetalleConfeccionID { get; set; }
         public int CategoriaID { get; set; }
-
         public int TelaID { get; set; }
-
         public short TallaID { get; set; }
-
         public byte TipoEstampadoID { get; set; }
+        public int Cantidad { get; set; }          
+        public string? Observacion { get; set; }
+        public DateTime FechaRegistro { get; set; } = DateTime.Now;
 
-        public string DisenoDescripcion { get; set; }
-
-        public string RutaImagenDiseno { get; set; }
+        // Navegaciones
+        public Categoria? Categoria { get; set; }
+        public Tela? Tela { get; set; }
+        public Talla? Talla { get; set; }
+        public TipoEstampado? TipoEstampado { get; set; }
     }
 }
