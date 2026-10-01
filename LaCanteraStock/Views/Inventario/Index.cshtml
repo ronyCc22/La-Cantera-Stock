@@ -1,36 +1,138 @@
 ﻿@model IEnumerable<LaCanteraStock.Models.ProductoTalla>
 
 @{
-    ViewData["Title"] = "Inventario";
+    ViewData["Title"] = "Stock en Tienda";
+    var productos = ViewBag.Productos as Dictionary<int, string>;
+    var tallas = ViewBag.Tallas as Dictionary<int, string>;
+
+    int totalItems = Model?.Count() ?? 0;
+    int stockBajo = Model?.Count(x => x.StockActual <= 10 && x.StockActual > 0) ?? 0;
+    int agotados = Model?.Count(x => x.StockActual == 0) ?? 0;
 }
 
-<h1>Inventario</h1>
+<div class="container-fluid px-0">
+    <!-- Cabecera de Sección -->
+    <div class="d-flex justify-content-between align-items-center my-4">
+        <div>
+            <h2 class="fw-bold text-dark mb-0">
+                <i class="fa-solid fa-boxes-stacked me-2" style="color: #071A33;"></i>Stock en Tienda
+            </h2>
+            <p class="text-muted mb-0">Control de disponibilidad inmediata de prendas de ropa deportiva por producto y talla.</p>
+        </div>
+        <div>
+            <a asp-action="Movimientos" class="btn btn-outline-dark me-2 shadow-sm fw-semibold">
+                <i class="fa-solid fa-clock-rotate-left me-1"></i> Movimientos
+            </a>
+            <a asp-action="Create" class="btn text-white shadow-sm fw-semibold" style="background-color: #20B26B; border: none;">
+                <i class="fa-solid fa-plus me-1"></i> Asignar Talla y Stock
+            </a>
+        </div>
+    </div>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Asignar talla y stock</a>
-    <a asp-action="Movimientos" class="btn btn-outline-secondary">Ver movimientos</a>
-</p>
+    <!-- Tarjetas de Resumen -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-3 p-3 text-white" style="background-color: #071A33;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="text-white-50 small text-uppercase fw-bold">Variantes Registradas</span>
+                        <h3 class="fw-bold mb-0 text-white">@totalItems</h3>
+                    </div>
+                    <i class="fa-solid fa-layer-group fa-2x text-white-50"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-3 p-3 bg-warning bg-opacity-10 text-warning-emphasis border-start border-warning border-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="small text-uppercase fw-bold text-warning-emphasis">Stock Bajo (<=10)</span>
+                        <h3 class="fw-bold mb-0">@stockBajo</h3>
+                    </div>
+                    <i class="fa-solid fa-triangle-exclamation fa-2x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-3 p-3 bg-danger bg-opacity-10 text-danger border-start border-danger border-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="small text-uppercase fw-bold text-danger">Agotados</span>
+                        <h3 class="fw-bold mb-0">@agotados</h3>
+                    </div>
+                    <i class="fa-solid fa-circle-xmark fa-2x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Producto</th>
-            <th>Talla</th>
-            <th>Stock actual</th>
-            <th>Stock mínimo</th>
-            <th>Estado</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr class="@(item.StockActual <= item.StockMinimo ? "table-danger" : "")">
-                <td>@ViewBag.Productos[item.ProductoID]</td>
-                <td>@ViewBag.Tallas[item.TallaID]</td>
-                <td>@item.StockActual</td>
-                <td>@item.StockMinimo</td>
-                <td>@(item.StockActual <= item.StockMinimo ? "Stock bajo" : "OK")</td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <!-- Tabla Principal -->
+    <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead style="background-color: #F8F9FA;">
+                        <tr class="text-uppercase small text-muted">
+                            <th class="ps-4 py-3">Código</th>
+                            <th class="py-3">Producto Deportivo</th>
+                            <th class="py-3">Talla</th>
+                            <th class="py-3">Stock Actual</th>
+                            <th class="py-3">Estado del Stock</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center py-5 text-muted">
+                                    <i class="fa-solid fa-folder-open fa-3x mb-3 text-secondary d-block"></i>
+                                    <h5>No hay registros de stock en tienda</h5>
+                                    <p class="small text-muted mb-0">Haz clic en "Asignar Talla y Stock" para añadir disponibilidad de prendas.</p>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var item in Model)
+                            {
+                                var nombreProducto = productos != null && productos.ContainsKey(item.ProductoID) ? productos[item.ProductoID] : "Producto #" + item.ProductoID;
+                                var nombreTalla = tallas != null && tallas.ContainsKey(item.TallaID) ? tallas[item.TallaID] : "Talla #" + item.TallaID;
+
+                                <tr>
+                                    <td class="ps-4 fw-bold" style="color: #071A33;">#@item.ProductoTallaID</td>
+                                    <td class="fw-semibold text-dark">@nombreProducto</td>
+                                    <td>
+                                        <span class="badge bg-light text-dark border px-3 py-2 fs-6">@nombreTalla</span>
+                                    </td>
+                                    <td>
+                                        <span class="fw-bold fs-5 text-dark">@item.StockActual</span> <span class="text-muted small">uds.</span>
+                                    </td>
+                                    <td>
+                                        @if (item.StockActual > 10)
+                                        {
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-2">
+                                                <i class="fa-solid fa-circle-check me-1"></i> Disponible
+                                            </span>
+                                        }
+                                        else if (item.StockActual > 0)
+                                        {
+                                            <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle rounded-pill px-3 py-2">
+                                                <i class="fa-solid fa-triangle-exclamation me-1"></i> Stock Bajo
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-3 py-2">
+                                                <i class="fa-solid fa-circle-xmark me-1"></i> Agotado
+                                            </span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

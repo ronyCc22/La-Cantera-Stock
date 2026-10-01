@@ -1,36 +1,62 @@
 ﻿@model LaCanteraStock.Models.ProductoTalla
 
 @{
-    ViewData["Title"] = "Asignar talla y stock";
+    ViewData["Title"] = "Asignar Talla y Stock";
 }
 
-<h1>Asignar talla y stock</h1>
+<div class="row justify-content-center my-4">
+    <div class="col-md-7 col-lg-6">
+        <div class="card shadow-sm border-0 rounded-3">
+            <div class="card-header bg-white border-bottom py-3">
+                <h4 class="mb-0 fw-bold" style="color: #071A33;">
+                    <i class="fa-solid fa-box-open me-2" style="color: #20B26B;"></i>Asignar Talla y Stock Inicial
+                </h4>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-<form asp-action="Create" method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="mb-3">
+                        <label asp-for="ProductoID" class="form-label fw-semibold text-dark">Producto Deportivo</label>
+                        <select asp-for="ProductoID" class="form-select py-2" asp-items="ViewBag.ProductoID">
+                            <option value="">-- Seleccione un Producto --</option>
+                        </select>
+                        <span asp-validation-for="ProductoID" class="text-danger small"></span>
+                    </div>
 
-    <div class="mb-3">
-        <label asp-for="ProductoID" class="form-label">Producto</label>
-        <select asp-for="ProductoID" class="form-select"
-                asp-items="ViewBag.ListaProductos"></select>
+                    <div class="mb-3">
+                        <label asp-for="TallaID" class="form-label fw-semibold text-dark">Talla</label>
+                        <select asp-for="TallaID" class="form-select py-2" asp-items="ViewBag.TallaID">
+                            <option value="">-- Seleccione una Talla --</option>
+                        </select>
+                        <span asp-validation-for="TallaID" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="StockActual" class="form-label fw-semibold text-dark">Stock Inicial (Cantidad)</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="fa-solid fa-cubes text-muted"></i></span>
+                            <input asp-for="StockActual" class="form-control py-2" placeholder="Ej. 25" min="0" />
+                        </div>
+                        <span asp-validation-for="StockActual" class="text-danger small"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                        <a asp-action="Index" class="btn btn-outline-secondary px-4">
+                            <i class="fa-solid fa-arrow-left me-1"></i> Cancelar
+                        </a> 
+                        <button type="submit" class="btn text-white px-4 fw-semibold" style="background-color: #071A33; border: none;">
+                            <i class="fa-solid fa-floppy-disk me-1"></i> Guardar Stock
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
+</div>
 
-    <div class="mb-3">
-        <label asp-for="TallaID" class="form-label">Talla</label>
-        <select asp-for="TallaID" class="form-select"
-                asp-items="ViewBag.ListaTallas"></select>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="StockActual" class="form-label">Stock inicial</label>
-        <input asp-for="StockActual" class="form-control" />
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="StockMinimo" class="form-label">Stock mínimo</label>
-        <input asp-for="StockMinimo" class="form-control" />
-    </div>
-
-    <button type="submit" class="btn btn-primary">Guardar</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-</form>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

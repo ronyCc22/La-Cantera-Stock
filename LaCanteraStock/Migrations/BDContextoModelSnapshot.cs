@@ -44,6 +44,36 @@ namespace LaCanteraStock.Migrations
                     b.HasKey("CategoriaID");
 
                     b.ToTable("Categorias");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoriaID = 1,
+                            Activo = true,
+                            Descripcion = "Camisetas deportivas",
+                            Nombre = "Camiseta"
+                        },
+                        new
+                        {
+                            CategoriaID = 2,
+                            Activo = true,
+                            Descripcion = "Shorts deportivos",
+                            Nombre = "Short"
+                        },
+                        new
+                        {
+                            CategoriaID = 3,
+                            Activo = true,
+                            Descripcion = "Pantalones deportivos",
+                            Nombre = "Pantalón"
+                        },
+                        new
+                        {
+                            CategoriaID = 4,
+                            Activo = true,
+                            Descripcion = "Casacas y abrigos",
+                            Nombre = "Casaca"
+                        });
                 });
 
             modelBuilder.Entity("LaCanteraStock.Models.Cliente", b =>
@@ -82,21 +112,22 @@ namespace LaCanteraStock.Migrations
 
             modelBuilder.Entity("LaCanteraStock.Models.DetalleConfeccion", b =>
                 {
-                    b.Property<int>("DetallePedidoID")
+                    b.Property<int>("DetalleConfeccionID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DetallePedidoID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DetalleConfeccionID"));
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
 
                     b.Property<int>("CategoriaID")
                         .HasColumnType("int");
 
-                    b.Property<string>("DisenoDescripcion")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("FechaRegistro")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("RutaImagenDiseno")
-                        .IsRequired()
+                    b.Property<string>("Observacion")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<short>("TallaID")
@@ -108,7 +139,7 @@ namespace LaCanteraStock.Migrations
                     b.Property<byte>("TipoEstampadoID")
                         .HasColumnType("tinyint");
 
-                    b.HasKey("DetallePedidoID");
+                    b.HasKey("DetalleConfeccionID");
 
                     b.HasIndex("CategoriaID");
 
@@ -425,6 +456,38 @@ namespace LaCanteraStock.Migrations
                     b.HasKey("TallaID");
 
                     b.ToTable("Tallas");
+
+                    b.HasData(
+                        new
+                        {
+                            TallaID = (short)1,
+                            Nombre = "S",
+                            Orden = (byte)0
+                        },
+                        new
+                        {
+                            TallaID = (short)2,
+                            Nombre = "M",
+                            Orden = (byte)0
+                        },
+                        new
+                        {
+                            TallaID = (short)3,
+                            Nombre = "L",
+                            Orden = (byte)0
+                        },
+                        new
+                        {
+                            TallaID = (short)4,
+                            Nombre = "XL",
+                            Orden = (byte)0
+                        },
+                        new
+                        {
+                            TallaID = (short)5,
+                            Nombre = "XXL",
+                            Orden = (byte)0
+                        });
                 });
 
             modelBuilder.Entity("LaCanteraStock.Models.Tela", b =>
@@ -449,6 +512,29 @@ namespace LaCanteraStock.Migrations
                     b.HasKey("TelaID");
 
                     b.ToTable("Telas");
+
+                    b.HasData(
+                        new
+                        {
+                            TelaID = 1,
+                            Activo = true,
+                            Descripcion = "Suave y transpirable",
+                            Nombre = "Algodón peinado"
+                        },
+                        new
+                        {
+                            TelaID = 2,
+                            Activo = true,
+                            Descripcion = "Secado rápido",
+                            Nombre = "Poliéster Dry-Fit"
+                        },
+                        new
+                        {
+                            TelaID = 3,
+                            Activo = true,
+                            Descripcion = "Elástico y cómodo",
+                            Nombre = "Jersey deportivo"
+                        });
                 });
 
             modelBuilder.Entity("LaCanteraStock.Models.TipoDocumento", b =>
@@ -480,6 +566,28 @@ namespace LaCanteraStock.Migrations
                     b.HasKey("TipoEstampadoID");
 
                     b.ToTable("TiposEstampado");
+
+                    b.HasData(
+                        new
+                        {
+                            TipoEstampadoID = (byte)1,
+                            Nombre = "Sublimado"
+                        },
+                        new
+                        {
+                            TipoEstampadoID = (byte)2,
+                            Nombre = "Serigrafía"
+                        },
+                        new
+                        {
+                            TipoEstampadoID = (byte)3,
+                            Nombre = "Bordado"
+                        },
+                        new
+                        {
+                            TipoEstampadoID = (byte)4,
+                            Nombre = "Vinil"
+                        });
                 });
 
             modelBuilder.Entity("LaCanteraStock.Models.TipoMovimiento", b =>
@@ -549,29 +657,37 @@ namespace LaCanteraStock.Migrations
 
             modelBuilder.Entity("LaCanteraStock.Models.DetalleConfeccion", b =>
                 {
-                    b.HasOne("LaCanteraStock.Models.Categoria", null)
+                    b.HasOne("LaCanteraStock.Models.Categoria", "Categoria")
                         .WithMany()
                         .HasForeignKey("CategoriaID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LaCanteraStock.Models.Talla", null)
+                    b.HasOne("LaCanteraStock.Models.Talla", "Talla")
                         .WithMany()
                         .HasForeignKey("TallaID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LaCanteraStock.Models.Tela", null)
+                    b.HasOne("LaCanteraStock.Models.Tela", "Tela")
                         .WithMany()
                         .HasForeignKey("TelaID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LaCanteraStock.Models.TipoEstampado", null)
+                    b.HasOne("LaCanteraStock.Models.TipoEstampado", "TipoEstampado")
                         .WithMany()
                         .HasForeignKey("TipoEstampadoID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Categoria");
+
+                    b.Navigation("Talla");
+
+                    b.Navigation("Tela");
+
+                    b.Navigation("TipoEstampado");
                 });
 
             modelBuilder.Entity("LaCanteraStock.Models.DetallePedido", b =>
