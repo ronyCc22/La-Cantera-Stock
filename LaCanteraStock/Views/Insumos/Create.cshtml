@@ -1,0 +1,97 @@
+﻿@model LaCanteraStock.Models.DetalleConfeccion
+
+@{
+    ViewData["Title"] = "Nuevo Detalle de Confección";
+}
+
+<div class="row justify-content-center my-4">
+    <div class="col-md-8 col-lg-7">
+        <div class="card shadow-sm border-0 rounded-3">
+            <div class="card-header bg-white border-bottom py-3">
+                <h4 class="mb-0 fw-bold" style="color:#071A33;">
+                    <i class="fa-solid fa-scissors me-2" style="color:#20B26B;"></i>
+                    Registrar Insumo / Confección
+                </h4>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="CategoriaID" class="form-label fw-semibold">
+                            <i class="fa-solid fa-shirt me-1 text-muted"></i> Prenda a confeccionar
+                        </label>
+                        <select asp-for="CategoriaID" class="form-select py-2" asp-items="ViewBag.CategoriaID">
+                            <option value="">-- Seleccione (Camiseta, Short, etc.) --</option>
+                        </select>
+                        <span asp-validation-for="CategoriaID" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="TelaID" class="form-label fw-semibold">
+                            <i class="fa-solid fa-scroll me-1 text-muted"></i> Tipo de Tela
+                        </label>
+                        <select asp-for="TelaID" class="form-select py-2" asp-items="ViewBag.TelaID">
+                            <option value="">-- Seleccione la tela --</option>
+                        </select>
+                        <span asp-validation-for="TelaID" class="text-danger small"></span>
+                        <div class="form-text">
+                            Si no aparece la tela, ve a <a asp-action="Telas" class="fw-semibold">Gestionar Telas</a> y créala primero.
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="TallaID" class="form-label fw-semibold">
+                                <i class="fa-solid fa-ruler me-1 text-muted"></i> Talla
+                            </label>
+                            <select asp-for="TallaID" class="form-select py-2" asp-items="ViewBag.TallaID">
+                                <option value="">-- Seleccione --</option>
+                            </select>
+                            <span asp-validation-for="TallaID" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="TipoEstampadoID" class="form-label fw-semibold">
+                                <i class="fa-solid fa-palette me-1 text-muted"></i> Tipo de Estampado
+                            </label>
+                            <select asp-for="TipoEstampadoID" class="form-select py-2" asp-items="ViewBag.TipoEstampadoID">
+                                <option value="">-- Seleccione --</option>
+                            </select>
+                            <span asp-validation-for="TipoEstampadoID" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Cantidad" class="form-label fw-semibold">
+                            <i class="fa-solid fa-hashtag me-1 text-muted"></i> Cantidad / Metros
+                        </label>
+                        <input asp-for="Cantidad" class="form-control py-2" min="1" placeholder="Ej. 50" />
+                        <span asp-validation-for="Cantidad" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Observacion" class="form-label fw-semibold">
+                            <i class="fa-solid fa-comment me-1 text-muted"></i> Observación (opcional)
+                        </label>
+                        <textarea asp-for="Observacion" class="form-control" rows="2" placeholder="Notas adicionales..."></textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-between pt-3 border-top">
+                        <a asp-action="Index" class="btn btn-outline-secondary px-4">
+                            <i class="fa-solid fa-arrow-left me-1"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn text-white px-4 fw-semibold" style="background-color:#071A33; border:none;">
+                            <i class="fa-solid fa-floppy-disk me-1"></i> Guardar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
